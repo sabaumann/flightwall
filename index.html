@@ -685,7 +685,7 @@ async function updateFlights() {
   $("status").textContent = "Flugdaten werden geladen …";
 
   const url =
-    `https://api.adsb.lol/v2/lat/${CONFIG.latitude}` +
+    `https://opendata.adsb.fi/api/v3/lat/${CONFIG.latitude}` +
     `/lon/${CONFIG.longitude}/dist/${CONFIG.radiusNM}`;
 
   try {
