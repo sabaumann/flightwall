@@ -2,767 +2,273 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080d16">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Flightwall">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#09111f">
 <title>Flightwall · Obertshausen</title>
-
 <style>
 :root {
   color-scheme: dark;
-  --bg: #080d16;
-  --panel: #111c2b;
-  --panel2: #16253a;
-  --border: #273a51;
-  --text: #f3f7ff;
-  --muted: #8da3bc;
-  --cyan: #68e5f3;
-  --green: #75e3a2;
-  --amber: #ffd18a;
-  --red: #ff8585;
+  --bg:#09111f; --panel:#111d30; --line:#263750;
+  --text:#f1f6ff; --muted:#91a4bd; --accent:#66e3c4;
 }
-* { box-sizing: border-box; }
-
-html { min-height: 100%; background: var(--bg); }
-
+* { box-sizing:border-box; }
 body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 15% 0%, #13253b 0, transparent 45%),
-    var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-variant-numeric: tabular-nums;
-  -webkit-font-smoothing: antialiased;
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-
-main {
-  max-width: 1600px;
-  margin: auto;
-  padding: 24px;
-}
-
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  padding: 12px 0 24px;
-  border-bottom: 1px solid var(--border);
+  padding:24px clamp(16px,4vw,40px);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; border-bottom:1px solid var(--line);
 }
-
-.brandline {
-  color: var(--cyan);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 3px;
+h1 { margin:0; font-size:clamp(23px,4vw,36px); letter-spacing:-1px; }
+.subtitle { color:var(--muted); margin-top:6px; font-size:14px; }
+.live { color:var(--accent); font-size:13px; white-space:nowrap; }
+main { padding:24px clamp(16px,4vw,40px); }
+.stats {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px; margin-bottom:22px;
 }
-
-h1 {
-  margin: 8px 0;
-  font-size: clamp(29px, 4vw, 46px);
-  line-height: 1;
-  letter-spacing: 1px;
+.stat,.flight {
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:16px; padding:18px;
 }
-
-.subtitle { color: var(--muted); font-size: 13px; }
-
-.clock { text-align: right; flex-shrink: 0; }
-
-#clock {
-  font-size: clamp(25px, 3vw, 37px);
-  font-weight: 750;
-  letter-spacing: 1px;
+.stat-label { color:var(--muted); font-size:13px; }
+.stat-value { font-size:clamp(23px,4vw,34px); font-weight:700; margin-top:8px; }
+.section-head {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin:24px 0 14px;
 }
-
-#date { margin-top: 5px; }
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 18px 0;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 10px 12px;
-  background: #101a29;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.pill strong { color: var(--text); }
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--green);
-  border-radius: 50%;
-  box-shadow: 0 0 12px #75e3a255;
-}
-
-#status {
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 8px 0 15px;
-}
-
-.section-heading h2 {
-  margin: 0;
-  font-size: 16px;
-  letter-spacing: 1px;
-}
-
-.section-heading span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.flight-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.flight-card {
-  min-width: 0;
-  padding: 19px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: linear-gradient(140deg, #17283d, #101927 78%);
-  box-shadow: 0 8px 24px #00000018;
-}
-
-.flight-top {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  min-width: 0;
-}
-
-.airline-logo {
-  width: 58px;
-  height: 58px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border: 1px solid #354d67;
-  border-radius: 13px;
-  background: #f5f7fb;
-  color: #17334d;
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: .4px;
-}
-
-.airline-logo img {
-  display: block;
-  width: 43px;
-  height: 43px;
-  object-fit: contain;
-}
-
-.flight-identity { min-width: 0; flex: 1; }
-
-.callsign {
-  font-size: clamp(20px, 2.4vw, 29px);
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
-.airline-name {
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.altitude {
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.altitude strong {
-  display: block;
-  color: var(--cyan);
-  font-size: 21px;
-}
-
-.altitude span {
-  display: block;
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 19px;
-  padding-top: 15px;
-  border-top: 1px solid var(--border);
-}
-
-.metric-label {
-  color: var(--muted);
-  font-size: 10px;
-  letter-spacing: .8px;
-  text-transform: uppercase;
-}
-
-.metric-value {
-  margin-top: 6px;
-  font-size: 15px;
-  font-weight: 750;
-  overflow-wrap: anywhere;
-}
-
-.flight-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px 13px;
-  margin-top: 15px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.flight-meta span { overflow-wrap: anywhere; }
-
-.empty, .error {
-  grid-column: 1 / -1;
-  padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  background: var(--panel);
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.error { border-color: #70464b; }
-
-footer {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 25px;
-  padding: 17px 0;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.8;
-}
-
-footer a { color: var(--cyan); text-decoration: none; }
-
+.section-head h2 { margin:0; font-size:20px; }
 button {
-  padding: 10px 13px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  background: var(--panel2);
-  color: var(--text);
-  font: inherit;
-  font-size: 12px;
-  cursor: pointer;
+  background:#1d3048; color:var(--text); border:1px solid #38516e;
+  border-radius:10px; padding:11px 15px; font-size:14px;
 }
-
-button:active { opacity: .7; }
-
-@media (max-width: 680px) {
-  main { padding: 15px; }
-  .flight-grid { grid-template-columns: 1fr; }
-  .flight-card { padding: 16px; }
-  .airline-logo { width: 50px; height: 50px; }
-  .airline-logo img { width: 38px; height: 38px; }
-  #status { width: 100%; margin-left: 0; }
-  header { gap: 10px; }
+button:active { opacity:.7; }
+#status { color:var(--muted); font-size:14px; line-height:1.6; }
+.grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));
+  gap:12px;
 }
-
-@media (orientation: landscape) and (min-width: 900px) {
-  .flight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.flight-top { display:flex; justify-content:space-between; gap:12px; }
+.callsign { font-size:21px; font-weight:750; overflow-wrap:anywhere; }
+.aircraft-type { color:var(--muted); font-size:13px; margin-top:5px; }
+.plane { font-size:26px; }
+.metrics {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px; margin-top:20px;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  * { scroll-behavior: auto !important; }
+.metric-label { color:var(--muted); font-size:12px; }
+.metric-value { margin-top:4px; font-size:17px; font-weight:650; }
+.footer { color:var(--muted); font-size:12px; margin-top:28px; line-height:1.7; }
+a { color:var(--accent); }
+@media(max-width:480px) {
+  header { align-items:flex-start; flex-direction:column; }
+  .stats { gap:8px; }
+  .stat { padding:12px; }
+  .stat-label { font-size:11px; }
 }
 </style>
 </head>
-
 <body>
+<header>
+  <div>
+    <h1>✈ Flightwall</h1>
+    <div class="subtitle">Live-Flugverkehr · Obertshausen</div>
+  </div>
+  <div class="live" id="live">● VERBINDE …</div>
+</header>
+
 <main>
-  <header>
-    <div>
-      <div class="brandline">LIVE AVIATION MONITOR</div>
-      <h1>FLIGHTWALL<span style="color:var(--cyan)">.</span></h1>
-      <div class="subtitle">OBERTSHAUSEN · FRANKFURT AM MAIN</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Flugzeuge erfasst</div>
+      <div class="stat-value" id="count">–</div>
     </div>
-    <div class="clock">
-      <div id="clock">--:--:--</div>
-      <div id="date" class="subtitle">Lokale Zeit</div>
+    <div class="stat">
+      <div class="stat-label">Suchradius</div>
+      <div class="stat-value">40 <span style="font-size:15px">NM</span></div>
     </div>
-  </header>
+    <div class="stat">
+      <div class="stat-label">Letztes Update</div>
+      <div class="stat-value" id="updated" style="font-size:19px">–</div>
+    </div>
+  </div>
 
-  <section class="toolbar">
-    <div class="pill"><span class="live-dot"></span>LIVE-TRACKING</div>
-    <div class="pill"><strong id="count">–</strong> Flugzeuge empfangen</div>
-    <div class="pill">Radius <strong id="radius">40 NM</strong></div>
-    <button id="refreshButton" type="button">↻ Aktualisieren</button>
-    <div id="status" role="status" aria-live="polite">Starte …</div>
-  </section>
+  <div class="section-head">
+    <h2>Flugzeuge in der Umgebung</h2>
+    <button id="refresh">↻ Aktualisieren</button>
+  </div>
+  <div id="status">Verbindung wird hergestellt …</div>
+  <div class="grid" id="flights"></div>
 
-  <section>
-    <div class="section-heading">
-      <h2>FLUGZEUGE IN DER UMGEBUNG</h2>
-      <span>Sortiert nach Entfernung</span>
-    </div>
-    <div id="flights" class="flight-grid">
-      <div class="empty">Flugdaten werden geladen …</div>
-    </div>
-  </section>
-
-  <footer>
-    <div>
-      <strong>DATA SOURCE</strong><br>
-      <a href="https://www.adsb.lol/" target="_blank" rel="noopener">ADSB.lol</a>
-      · Live-Positionsdaten
-    </div>
-    <div>
-      <strong>FLIGHTWALL PERSONAL</strong><br>
-      Keine vollständige Radarerfassung garantiert
-    </div>
-  </footer>
+  <div class="footer">
+    Standort: Obertshausen, Deutschland · Aktualisierung alle 30 Sekunden.<br>
+    Datenquelle: <a href="https://www.adsb.fi/" target="_blank" rel="noopener">ADSB.fi</a>.
+    Flugzeugdaten können unvollständig sein. Angezeigt werden nur von der Datenquelle
+    erfasste Flugzeuge, nicht zwangsläufig jedes Flugzeug am Himmel.
+  </div>
 </main>
 
 <script>
 "use strict";
 
-/* =========================================
-   FLIGHTWALL KONFIGURATION
-   ========================================= */
-
 const CONFIG = {
-  // Ungefähre Ortsmitte von Obertshausen
   latitude: 50.071,
   longitude: 8.850,
-
-  // Suchradius in nautischen Meilen
-  radiusNM: 40,
-
-  // Aktualisierungsintervall
-  refreshMilliseconds: 30000,
-
-  // Begrenzung der dargestellten Flugkarten
-  maximumCards: 36
+  distance: 40,
+  refreshMs: 30000
 };
 
-/* =========================================
-   AIRLINE-ZUORDNUNG
-   Logos werden über Domains geladen.
-   Kürzel bleiben der Fallback.
-   ========================================= */
+const API =
+  `https://opendata.adsb.fi/api/v3/lat/${CONFIG.latitude}` +
+  `/lon/${CONFIG.longitude}/dist/${CONFIG.distance}`;
 
-const AIRLINES = {
-  DLH: { name: "Lufthansa", domain: "lufthansa.com" },
-  EWG: { name: "Eurowings", domain: "eurowings.com" },
-  RYR: { name: "Ryanair", domain: "ryanair.com" },
-  EZY: { name: "easyJet", domain: "easyjet.com" },
-  CFG: { name: "Condor", domain: "condor.com" },
-  TUI: { name: "TUI fly", domain: "tuifly.com" },
-  AFR: { name: "Air France", domain: "airfrance.com" },
-  KLM: { name: "KLM", domain: "klm.com" },
-  BAW: { name: "British Airways", domain: "britishairways.com" },
-  UAE: { name: "Emirates", domain: "emirates.com" },
-  QTR: { name: "Qatar Airways", domain: "qatarairways.com" },
-  AUA: { name: "Austrian Airlines", domain: "austrian.com" },
-  SWR: { name: "SWISS", domain: "swiss.com" },
-  SAS: { name: "Scandinavian Airlines", domain: "flysas.com" },
-  THY: { name: "Turkish Airlines", domain: "turkishairlines.com" },
-  WZZ: { name: "Wizz Air", domain: "wizzair.com" },
-  TAP: { name: "TAP Air Portugal", domain: "flytap.com" },
-  VLG: { name: "Vueling", domain: "vueling.com" },
-  ICE: { name: "Icelandair", domain: "icelandair.com" },
-  FDX: { name: "FedEx Express", domain: "fedex.com" },
-  UPS: { name: "UPS Airlines", domain: "ups.com" },
-  DHL: { name: "DHL Aviation", domain: "dhl.com" },
-  ACA: { name: "Air Canada", domain: "aircanada.com" },
-  AAL: { name: "American Airlines", domain: "aa.com" },
-  DAL: { name: "Delta Air Lines", domain: "delta.com" },
-  UAL: { name: "United Airlines", domain: "united.com" },
-  JAL: { name: "Japan Airlines", domain: "jal.com" },
-  ANA: { name: "ANA", domain: "ana.co.jp" },
-  SIA: { name: "Singapore Airlines", domain: "singaporeair.com" },
-  ETD: { name: "Etihad Airways", domain: "etihad.com" },
-  ETH: { name: "Ethiopian Airlines", domain: "ethiopianairlines.com" },
-  PGT: { name: "Pegasus Airlines", domain: "flypgs.com" },
-  TVF: { name: "Transavia France", domain: "transavia.com" },
-  TRA: { name: "Transavia", domain: "transavia.com" },
-  LOT: { name: "LOT Polish Airlines", domain: "lot.com" },
-  FIN: { name: "Finnair", domain: "finnair.com" },
-  BEL: { name: "Brussels Airlines", domain: "brusselsairlines.com" },
-  AZA: { name: "ITA Airways", domain: "ita-airways.com" },
-  VOE: { name: "Volotea", domain: "volotea.com" },
-  JBU: { name: "JetBlue", domain: "jetblue.com" },
-  SWA: { name: "Southwest Airlines", domain: "southwest.com" },
-  FDB: { name: "flydubai", domain: "flydubai.com" },
-  OMA: { name: "Oman Air", domain: "omanair.com" },
-  RJA: { name: "Royal Jordanian", domain: "rj.com" },
-  MEA: { name: "Middle East Airlines", domain: "mea.com.lb" },
-  SVA: { name: "Saudia", domain: "saudia.com" },
-  PIA: { name: "Pakistan International Airlines", domain: "piac.com.pk" },
-  BAW: { name: "British Airways", domain: "britishairways.com" }
-};
+const PROXY =
+  "https://api.allorigins.win/raw?url=" + encodeURIComponent(API);
 
 const $ = id => document.getElementById(id);
 
-$("radius").textContent = CONFIG.radiusNM + " NM";
-
-/* =========================================
-   SICHERE TEXTDARSTELLUNG
-   ========================================= */
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+function number(value, digits = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toFixed(digits) : "–";
 }
 
-/* =========================================
-   UHR UND DATUM
-   ========================================= */
-
-function updateClock() {
-  const now = new Date();
-
-  $("clock").textContent = now.toLocaleTimeString("de-DE", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
-  });
-
-  $("date").textContent = now.toLocaleDateString("de-DE", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  });
-}
-
-updateClock();
-setInterval(updateClock, 1000);
-
-/* =========================================
-   ENTFERNUNGSBERECHNUNG
-   ========================================= */
-
-function distanceKm(lat1, lon1, lat2, lon2) {
-  const rad = degrees => degrees * Math.PI / 180;
-
-  const dLat = rad(lat2 - lat1);
-  const dLon = rad(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(rad(lat1)) *
-    Math.cos(rad(lat2)) *
-    Math.sin(dLon / 2) ** 2;
-
-  return 6371 * 2 *
-    Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-/* =========================================
-   AIRLINE ERKENNEN
-   ========================================= */
-
-function getAirline(aircraft) {
-  const callsign = String(aircraft.flight || "")
-    .trim()
-    .toUpperCase();
-
-  // Viele Airline-Rufzeichen beginnen mit drei Buchstaben.
-  const prefix = callsign.match(/^[A-Z]{3}/)?.[0] || "";
-  const airline = AIRLINES[prefix];
-
-  return {
-    callsign: callsign || String(aircraft.hex || "UNKNOWN").toUpperCase(),
-    code: prefix || "✈",
-    name: airline?.name || (
-      prefix ? "Airline " + prefix : "Keine Flugnummer übertragen"
-    ),
-    domain: airline?.domain || ""
-  };
-}
-
-/* =========================================
-   FLUGHÖHE, GESCHWINDIGKEIT UND KURS
-   ========================================= */
-
-function getAltitude(aircraft) {
-  if (aircraft.alt_baro === "ground") {
-    return "Am Boden";
-  }
-
-  if (typeof aircraft.alt_baro === "number") {
-    return Math.round(aircraft.alt_baro).toLocaleString("de-DE") + " ft";
-  }
-
-  if (typeof aircraft.alt_geom === "number") {
-    return Math.round(aircraft.alt_geom).toLocaleString("de-DE") + " ft";
-  }
-
+function altitude(ac) {
+  if (typeof ac.alt_baro === "number") return `${number(ac.alt_baro)} ft`;
+  if (typeof ac.alt_geom === "number") return `${number(ac.alt_geom)} ft`;
+  if (ac.alt_baro === "ground") return "Am Boden";
   return "–";
 }
 
-function getSpeed(aircraft) {
-  if (typeof aircraft.gs !== "number") return "–";
+function distance(ac) {
+  if (!Number.isFinite(Number(ac.lat)) ||
+      !Number.isFinite(Number(ac.lon))) return null;
 
-  return Math.round(aircraft.gs * 1.852) + " km/h";
+  const rad = n => n * Math.PI / 180;
+  const dLat = rad(ac.lat - CONFIG.latitude);
+  const dLon = rad(ac.lon - CONFIG.longitude);
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(rad(CONFIG.latitude)) *
+    Math.cos(rad(ac.lat)) *
+    Math.sin(dLon / 2) ** 2;
+
+  return 3440.065 * 2 *
+    Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function getDirection(aircraft) {
-  if (typeof aircraft.track !== "number") return "–";
+function renderAircraft(aircraft) {
+  const container = $("flights");
+  container.replaceChildren();
 
-  const directions = ["N", "NO", "O", "SO", "S", "SW", "W", "NW"];
-  const direction = directions[
-    Math.round(aircraft.track / 45) % 8
-  ];
+  aircraft.sort((a, b) =>
+    (distance(a) ?? 9999) - (distance(b) ?? 9999)
+  );
 
-  return direction + " " + Math.round(aircraft.track) + "°";
-}
+  for (const ac of aircraft) {
+    const card = document.createElement("article");
+    card.className = "flight";
 
-function getVerticalRate(aircraft) {
-  const rate = aircraft.baro_rate ?? aircraft.geom_rate;
+    const top = document.createElement("div");
+    top.className = "flight-top";
 
-  if (typeof rate !== "number") return "Vertikalrate –";
-  if (rate > 100) return "↑ Steigend";
-  if (rate < -100) return "↓ Sinkend";
+    const info = document.createElement("div");
+    const callsign = document.createElement("div");
+    callsign.className = "callsign";
+    callsign.textContent = String(ac.flight || ac.hex || "Unbekannt").trim();
 
-  return "→ Stabil";
-}
+    const type = document.createElement("div");
+    type.className = "aircraft-type";
+    type.textContent = [ac.t, ac.r].filter(Boolean).join(" · ") ||
+      "Flugzeugdaten";
 
-/* =========================================
-   LOGO-URL UND FALLBACK
-   ========================================= */
+    info.append(callsign, type);
 
-function logoURL(domain) {
-  if (!domain) return "";
+    const icon = document.createElement("div");
+    icon.className = "plane";
+    icon.textContent = "✈";
+    top.append(info, icon);
+    card.append(top);
 
-  return "https://www.google.com/s2/favicons?domain=" +
-    encodeURIComponent(domain) + "&sz=128";
-}
+    const metrics = document.createElement("div");
+    metrics.className = "metrics";
 
-function logoHTML(airline) {
-  const fallback = escapeHTML(airline.code);
+    const values = [
+      ["Höhe", altitude(ac)],
+      ["Geschwindigkeit", typeof ac.gs === "number"
+        ? `${number(ac.gs)} kt` : "–"],
+      ["Entfernung", distance(ac) === null
+        ? "–" : `${number(distance(ac), 1)} NM`],
+      ["Richtung", typeof ac.track === "number"
+        ? `${number(ac.track)}°` : "–"]
+    ];
 
-  if (!airline.domain) {
-    return fallback;
+    for (const [label, value] of values) {
+      const item = document.createElement("div");
+      const l = document.createElement("div");
+      l.className = "metric-label";
+      l.textContent = label;
+      const v = document.createElement("div");
+      v.className = "metric-value";
+      v.textContent = value;
+      item.append(l, v);
+      metrics.append(item);
+    }
+
+    card.append(metrics);
+    container.append(card);
   }
-
-  // Das Logo wird zusätzlich im onerror-Fall ausgeblendet.
-  // Das Airline-Kürzel bleibt darunter als sichtbarer Fallback.
-  return `
-    <span class="logo-fallback">${fallback}</span>
-    <img
-      src="${escapeHTML(logoURL(airline.domain))}"
-      alt=""
-      width="43"
-      height="43"
-      loading="lazy"
-      onerror="this.style.display='none'"
-    >
-  `;
 }
 
-/* =========================================
-   FLUGKARTE RENDERN
-   ========================================= */
+let loading = false;
 
-function renderCard(aircraft) {
-  const airline = getAirline(aircraft);
-
-  const distance = aircraft._distance;
-  const type = aircraft.t || "Flugzeugtyp unbekannt";
-  const registration = aircraft.r || "Registrierung unbekannt";
-  const hex = aircraft.hex || "";
-  const squawk = aircraft.squawk || "–";
-
-  const positionAge =
-    typeof aircraft.seen_pos === "number"
-      ? Math.round(aircraft.seen_pos) + " s"
-      : "–";
-
-  const mapURL =
-    "https://globe.adsbexchange.com/?icao=" +
-    encodeURIComponent(hex);
-
-  return `
-    <article class="flight-card">
-      <div class="flight-top">
-        <div class="airline-logo">
-          ${logoHTML(airline)}
-        </div>
-
-        <div class="flight-identity">
-          <div class="callsign">${escapeHTML(airline.callsign)}</div>
-          <div class="airline-name">${escapeHTML(airline.name)}</div>
-        </div>
-
-        <div class="altitude">
-          <strong>${escapeHTML(getAltitude(aircraft))}</strong>
-          <span>${escapeHTML(getVerticalRate(aircraft))}</span>
-        </div>
-      </div>
-
-      <div class="metrics">
-        <div>
-          <div class="metric-label">Geschwindigkeit</div>
-          <div class="metric-value">${escapeHTML(getSpeed(aircraft))}</div>
-        </div>
-
-        <div>
-          <div class="metric-label">Flugrichtung</div>
-          <div class="metric-value">${escapeHTML(getDirection(aircraft))}</div>
-        </div>
-
-        <div>
-          <div class="metric-label">Entfernung</div>
-          <div class="metric-value">${distance.toFixed(1)} km</div>
-        </div>
-      </div>
-
-      <div class="flight-meta">
-        <span>✈ ${escapeHTML(type)}</span>
-        <span>Reg. ${escapeHTML(registration)}</span>
-        <span>Squawk ${escapeHTML(squawk)}</span>
-        <span>Position ${escapeHTML(positionAge)} alt</span>
-      </div>
-
-      <div style="margin-top:14px">
-        <a
-          href="${mapURL}"
-          target="_blank"
-          rel="noopener"
-          style="color:var(--cyan);font-size:12px;text-decoration:none"
-        >Flug auf Karte verfolgen ↗</a>
-      </div>
-    </article>
-  `;
-}
-
-/* =========================================
-   LIVE-DATEN ABRUFEN
-   ========================================= */
-
-let requestInProgress = false;
-
-async function updateFlights() {
-  if (requestInProgress) return;
-
-  requestInProgress = true;
+async function loadFlights() {
+  if (loading) return;
+  loading = true;
+  $("live").textContent = "● AKTUALISIERE";
   $("status").textContent = "Flugdaten werden geladen …";
 
-  const url =
-    `https://opendata.adsb.fi/api/v3/lat/${CONFIG.latitude}` +
-    `/lon/${CONFIG.longitude}/dist/${CONFIG.radiusNM}`;
-
   try {
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await fetch(PROXY, {
+      cache: "no-store",
+      headers: { "Accept": "application/json" }
+    });
 
     if (!response.ok) {
-      throw new Error("HTTP " + response.status);
+      throw new Error(`Datenserver antwortet mit HTTP ${response.status}`);
     }
 
     const data = await response.json();
+    const aircraft = data.aircraft ?? data.ac;
 
-    const aircraft = (data.ac || [])
-      .filter(item =>
-        Number.isFinite(item.lat) &&
-        Number.isFinite(item.lon)
-      )
-      .map(item => ({
-        ...item,
-        _distance: distanceKm(
-          CONFIG.latitude,
-          CONFIG.longitude,
-          item.lat,
-          item.lon
-        )
-      }))
-      .filter(item =>
-        item._distance <= CONFIG.radiusNM * 1.852
-      )
-      .sort((a, b) => a._distance - b._distance);
+    if (!Array.isArray(aircraft)) {
+      throw new Error("Unbekanntes Datenformat der API.");
+    }
 
+    renderAircraft(aircraft);
     $("count").textContent = aircraft.length;
-
-    if (aircraft.length === 0) {
-      $("flights").innerHTML = `
-        <div class="empty">
-          <strong>Momentan keine Flugzeuge empfangen.</strong><br>
-          Das bedeutet nicht zwingend, dass keine Flugzeuge in der
-          Umgebung sind. Die Datenabdeckung kann schwanken.
-          Wir versuchen es beim nächsten Abruf erneut.
-        </div>
-      `;
-    } else {
-      $("flights").innerHTML = aircraft
-        .slice(0, CONFIG.maximumCards)
-        .map(renderCard)
-        .join("");
-    }
-
-    $("status").textContent =
-      "Letzter Abruf " +
-      new Date().toLocaleTimeString("de-DE") +
-      " · Aktualisierung alle " +
-      Math.round(CONFIG.refreshMilliseconds / 1000) +
-      " s";
-
+    $("updated").textContent = new Date().toLocaleTimeString("de-DE", {
+      hour: "2-digit", minute: "2-digit", second: "2-digit"
+    });
+    $("live").textContent = "● LIVE";
+    $("status").textContent = aircraft.length
+      ? `${aircraft.length} Flugzeuge empfangen. Sortiert nach Entfernung.`
+      : "Aktuelle Daten empfangen, aber keine Flugzeuge im Suchradius.";
   } catch (error) {
-    $("status").textContent = "Live-Daten derzeit nicht verfügbar";
-
-    if (!$("flights").children.length) {
-      $("flights").innerHTML = `
-        <div class="error">
-          <strong>Verbindung fehlgeschlagen.</strong><br>
-          Bitte Internetverbindung und ADSB.lol-Verfügbarkeit prüfen.
-          <br><br>
-          Technische Meldung: ${escapeHTML(error.message)}
-        </div>
-      `;
-    }
+    console.error("Flightwall:", error);
+    $("live").textContent = "● FEHLER";
+    $("status").textContent =
+      `Live-Daten konnten nicht geladen werden: ${error.message}. ` +
+      "Bitte später erneut versuchen.";
+    $("count").textContent = "–";
   } finally {
-    requestInProgress = false;
+    loading = false;
   }
 }
 
-$("refreshButton").addEventListener("click", updateFlights);
-
-updateFlights();
-setInterval(updateFlights, CONFIG.refreshMilliseconds);
+$("refresh").addEventListener("click", loadFlights);
+loadFlights();
+setInterval(loadFlights, CONFIG.refreshMs);
 </script>
 </body>
 </html>
